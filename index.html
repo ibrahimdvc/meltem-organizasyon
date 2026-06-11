@@ -37,11 +37,12 @@
   @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 
   /* ---------- ÜST ARAÇ ÇUBUĞU ---------- */
-  #toolbar{flex:none;width:100%;min-height:52px;background:#fff;border-bottom:1px solid #d8deea;
-    display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:8px 14px;z-index:500;
+  #toolbar{position:sticky;top:0;flex:none;width:100%;min-height:52px;background:#fff;border-bottom:1px solid #d8deea;
+    display:flex;flex-wrap:nowrap;align-items:center;gap:6px;padding:8px 14px;z-index:500;
+    overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;
     box-shadow:0 2px 8px rgba(20,30,60,.06)}
   #toolbar img{height:30px;margin-right:6px}
-  .tbGroup{display:flex;align-items:center;gap:6px;padding:0 10px;border-left:1px solid #e3e8f1}
+  .tbGroup{display:flex;flex:none;align-items:center;gap:6px;padding:0 10px;border-left:1px solid #e3e8f1}
   .tbGroup:first-of-type{border-left:none}
   .btn{border:1px solid #c8d0e0;background:#fff;border-radius:7px;padding:7px 12px;font-size:13px;cursor:pointer;
     color:#2a3550;white-space:nowrap;display:inline-flex;align-items:center;gap:5px}
@@ -53,6 +54,13 @@
   #zoomPct{font-size:13px;min-width:46px;text-align:center;color:#5a6478}
   #saveBadge{font-size:12px;color:#2e8b57;opacity:0;transition:opacity .4s;margin-left:auto;margin-right:8px}
   #toolbar .spacer{flex:1}
+  @media (max-width:760px){
+    #toolbar{padding:7px 8px}
+    #toolbar img{height:26px}
+    .tbGroup{padding:0 6px}
+    .btn{padding:7px 9px}
+    #saveBadge{margin-left:4px}
+  }
 
   /* ---------- ŞEMA ALANI ---------- */
   #chartScroll{flex:1;min-height:0;width:100%;overflow:auto;cursor:grab}
@@ -231,6 +239,7 @@
 "use strict";
 /* ============ SABİTLER ============ */
 const LS_DATA = "mk_org_data_v2";
+const LS_DATA_BACKUP = "mk_org_data_backup_v2";
 const LS_PASS = "mk_org_pass_v1";
 const DEFAULT_PASS = "meltem2026";
 
@@ -287,18 +296,35 @@ let root = null;
 let undoStack = [];
 
 function loadData(){
-  try {
-    const s = localStorage.getItem(LS_DATA);
-    if (s) { root = JSON.parse(s); return; }
-  } catch(e){}
+  for (const key of [LS_DATA, LS_DATA_BACKUP]){
+    try {
+      const s = localStorage.getItem(key);
+      if (!s) continue;
+      const parsed = JSON.parse(s);
+      if (parsed && typeof parsed.title === "string" && Array.isArray(parsed.children)){
+        root = parsed;
+        if (key === LS_DATA_BACKUP) localStorage.setItem(LS_DATA, s);
+        return;
+      }
+    } catch(e){}
+  }
   root = defaultData();
 }
 function saveData(){
-  try { localStorage.setItem(LS_DATA, JSON.stringify(root)); } catch(e){}
   const b = document.getElementById("saveBadge");
+  try {
+    const data = JSON.stringify(root);
+    localStorage.setItem(LS_DATA, data);
+    localStorage.setItem(LS_DATA_BACKUP, data);
+    b.textContent = "✓ Bu cihazda kaydedildi";
+    b.style.color = "#2e8b57";
+  } catch(e){
+    b.textContent = "Kayıt başarısız";
+    b.style.color = "#b03030";
+  }
   b.style.opacity = 1;
   clearTimeout(saveData._t);
-  saveData._t = setTimeout(()=>{ b.style.opacity = 0; }, 1500);
+  saveData._t = setTimeout(()=>{ b.style.opacity = 0; }, 2200);
 }
 function pushUndo(){
   undoStack.push(JSON.stringify(root));
