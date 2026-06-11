@@ -15,7 +15,8 @@
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%}
-  body{font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;background:var(--bg);color:#1c2430;overflow:hidden}
+  body{font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;background:var(--bg);color:#1c2430;
+    overflow:hidden;display:flex;flex-direction:column}
 
   /* ---------- GİRİŞ EKRANI ---------- */
   #loginOverlay{position:fixed;inset:0;background:linear-gradient(160deg,#23215c 0%,#2f5496 100%);
@@ -36,8 +37,9 @@
   @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 
   /* ---------- ÜST ARAÇ ÇUBUĞU ---------- */
-  #toolbar{position:fixed;top:0;left:0;right:0;height:56px;background:#fff;border-bottom:1px solid #d8deea;
-    display:flex;align-items:center;gap:8px;padding:0 14px;z-index:500;box-shadow:0 2px 8px rgba(20,30,60,.06)}
+  #toolbar{flex:none;width:100%;min-height:52px;background:#fff;border-bottom:1px solid #d8deea;
+    display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:8px 14px;z-index:500;
+    box-shadow:0 2px 8px rgba(20,30,60,.06)}
   #toolbar img{height:30px;margin-right:6px}
   .tbGroup{display:flex;align-items:center;gap:6px;padding:0 10px;border-left:1px solid #e3e8f1}
   .tbGroup:first-of-type{border-left:none}
@@ -53,7 +55,7 @@
   #toolbar .spacer{flex:1}
 
   /* ---------- ŞEMA ALANI ---------- */
-  #chartScroll{position:absolute;top:56px;bottom:0;left:0;right:0;overflow:auto;cursor:grab}
+  #chartScroll{flex:1;min-height:0;width:100%;overflow:auto;cursor:grab}
   #chartScroll.dragging{cursor:grabbing;user-select:none}
   #chartZoom{transform-origin:0 0;width:max-content;min-width:100%;padding:10px 40px 60px}
 
@@ -122,7 +124,7 @@
   /* ---------- BASKI ---------- */
   @page{size:A4 landscape;margin:8mm}
   @media print{
-    body{background:#fff;overflow:visible}
+    body{background:#fff;overflow:visible;display:block;height:auto}
     #toolbar,#loginOverlay,.modalBack,.addChildBtn{display:none !important}
     #chartScroll{position:static;overflow:visible}
     #chartZoom{transform:none !important;padding:0;width:max-content;zoom:var(--print-zoom)}
