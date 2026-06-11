@@ -228,7 +228,7 @@
 <script>
 "use strict";
 /* ============ SABİTLER ============ */
-const LS_DATA = "mk_org_data_v1";
+const LS_DATA = "mk_org_data_v2";
 const LS_PASS = "mk_org_pass_v1";
 const DEFAULT_PASS = "meltem2026";
 
@@ -261,26 +261,24 @@ function uid(){ return "n" + Date.now().toString(36) + Math.random().toString(36
 function mkNode(title, people, children){
   return { id: uid(), title: title, people: people||[], children: children||[] };
 }
+function vardiya(grup){
+  return mkNode("Vardiya Amiri\n" + grup + " Grubu", [{name:"Ad Soyad",role:"Vardiya Amiri"}], [
+    mkNode("Operatörler", [{name:"Ad Soyad",role:"Operatör"},{name:"Ad Soyad",role:"Operatör"}])
+  ]);
+}
 function defaultData(){
-  return mkNode("GENEL MÜDÜR", [{name:"Ad Soyad",role:""}], [
-    mkNode("ÜRETİM MÜDÜRÜ", [{name:"Ad Soyad",role:""}], [
-      mkNode("Vardiya Amiri\nA Grubu", [{name:"Ad Soyad",role:"Vardiya Amiri"}], [
-        mkNode("Operatörler", [{name:"Ad Soyad",role:"Operatör"},{name:"Ad Soyad",role:"Operatör"}])
+  return mkNode("TEKNİK BİRİMLER\nGENEL MÜDÜR YARDIMCISI", [{name:"Ad Soyad",role:""}], [
+    mkNode("KIDEMLİ İŞLETMELER MÜDÜRÜ", [{name:"Ad Soyad",role:""}], [
+      mkNode("ÜRETİM MÜDÜRÜ", [{name:"Ad Soyad",role:""}], [
+        mkNode("ÜRETİM GRUBU", [{name:"Ad Soyad",role:""}], [
+          vardiya("A"), vardiya("B"), vardiya("C"), vardiya("D")
+        ])
       ]),
-      mkNode("Vardiya Amiri\nB Grubu", [{name:"Ad Soyad",role:"Vardiya Amiri"}], [
-        mkNode("Operatörler", [{name:"Ad Soyad",role:"Operatör"},{name:"Ad Soyad",role:"Operatör"}])
-      ]),
-      mkNode("Vardiya Amiri\nC Grubu", [{name:"Ad Soyad",role:"Vardiya Amiri"}], [
-        mkNode("Operatörler", [{name:"Ad Soyad",role:"Operatör"},{name:"Ad Soyad",role:"Operatör"}])
+      mkNode("MAKİNE-ELEKTRİK\nBAKIM MÜDÜRÜ", [{name:"Ad Soyad",role:""}], [
+        mkNode("Makine (Mekanik) Bakım", [{name:"Ad Soyad",role:"Bakım Teknikeri"}]),
+        mkNode("Elektrik Bakım", [{name:"Ad Soyad",role:"Elektrik Teknikeri"}])
       ])
-    ]),
-    mkNode("BAKIM MÜDÜRÜ", [{name:"Ad Soyad",role:""}], [
-      mkNode("Mekanik Bakım", [{name:"Ad Soyad",role:"Bakım Teknikeri"}]),
-      mkNode("Elektrik Bakım", [{name:"Ad Soyad",role:"Elektrik Teknikeri"}])
-    ]),
-    mkNode("KALİTE KONTROL", [{name:"Ad Soyad",role:"Kalite Sorumlusu"}]),
-    mkNode("İDARİ İŞLER & MUHASEBE", [{name:"Ad Soyad",role:""}]),
-    mkNode("SATIŞ & LOJİSTİK", [{name:"Ad Soyad",role:""}])
+    ])
   ]);
 }
 let root = null;
